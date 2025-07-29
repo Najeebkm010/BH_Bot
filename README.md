@@ -1,24 +1,34 @@
 # Security Scanner Discord Bot
 
-A Discord bot that provides security scanning capabilities through simple commands. The bot integrates multiple security scanning tools including subfinder for subdomain enumeration, nmap for port scanning, and nf for additional scanning functionality.
+A Discord bot that provides security scanning capabilities through simple commands. The bot integrates multiple security tools including `subfinder`, `nmap`, `nf` (Nuclear Fuzzer), `paramspider`, and `kxss` to automate basic security reconnaissance directly from Discord.
 
-## Features
+---
 
-- **Subdomain Enumeration**: Scan for subdomains using subfinder
-- **Port Scanning**: Perform port scans using nmap
-- **NF Scanning**: Execute nf scans for additional security checks
-- **Automatic File Handling**: Results are automatically saved and cleaned up
-- **Smart Output**: Sends results directly in Discord for small outputs, or as files for larger scans
+## ✨ Features
 
-## Prerequisites
+- **Subdomain Enumeration**: Scan for subdomains using `subfinder`
+- **Port Scanning**: Perform port scans using `nmap`
+- **NF Scanning**: Run Nuclear Fuzzer (nf) scans for security testing
+- **XSS Detection**: Discover reflected XSS using `paramspider` + `kxss`
+- **Smart Output**: Results sent directly in Discord if small, or uploaded as a file if large
+- **Automatic Cleanup**: Temporary result files are removed after sending
+- **Basic Error Filtering**: Logs only real errors, ignores tool info/debug output
 
-Before running this bot, you need to have the following installed on your system:
+---
 
-- Python 3.8 or higher
-- discord.py library
-- subfinder
-- nmap
-- nf (Nuclear Fuzzer )
+## 🧰 Prerequisites
+
+Make sure you have the following installed and accessible from your system's PATH:
+
+- Python 3.8+
+- `discord.py` library
+- [`subfinder`](https://github.com/projectdiscovery/subfinder)
+- [`nmap`](https://nmap.org/)
+- [`nf` (Nuclear Fuzzer)](https://github.com/devanshbatham/Nuclear)
+- [`paramspider`](https://github.com/devanshbatham/paramspider)
+- [`kxss`](https://github.com/tomnomnom/kxss)
+
+---
 
 ## Installation
 
@@ -38,69 +48,91 @@ pip install discord.py
 # For Debian/Ubuntu systems
 sudo apt-get update
 sudo apt-get install nmap
+golang git
 
 # Install subfinder
+# Install subfinder
 go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+# Install paramspider
+git clone https://github.com/devanshbatham/paramspider
+cd paramspider && pip install -r requirements.txt && cd ..
+
+# Install kxss
+go install github.com/tomnomnom/kxss@latest
+
+# Install nf (Nuclear Fuzzer)
+git clone https://github.com/devanshbatham/Nuclear
+cd Nuclear && pip install -r requirements.txt && cd ..
 
 # Install nf (follow the tool's specific installation instructions)
 ```
 
-4. Set up the configuration:
-- Replace `'Your Discord Token'` in `bot.py` with your actual Discord bot token
-- Ensure all shell scripts have execution permissions:
-```bash
+4. Set Execution Permissions
 chmod +x subfinder_scan.sh nmap_scan.sh nf_scan.sh
-```
+
+5. Configure Bot
+Replace 'Your Discord Token' in bot.py with your actual Discord Bot Token
 
 ## Usage
 
-The bot responds to the following commands:
+Once the bot is running, use the following commands in your Discord server:
 
-- `!subs <domain>`: Enumerate subdomains
-  ```
-  Example: !subs example.com
-  ```
+```
+| Command          | Description                                 |
+| ---------------- | ------------------------------------------- |
+| `!subs <domain>` | Enumerate subdomains                        |
+| `!port <domain>` | Perform port scanning                       |
+| `!nf <domain>`   | Run Nuclear Fuzzer scan                     |
+| `!xss <domain>`  | Detect reflected XSS via paramspider + kxss |
+```
 
-- `!port <domain>`: Perform port scanning
-  ```
-  Example: !port example.com
-  ```
+Example usage:
 
-- `!nf <domain>`: Run nf scan
-  ```
-  Example: !nf example.com
-  ```
+```
+!subs example.com
+!port example.com
+!nf example.com
+!xss testphp.vulnweb.com
+```
 
 ## Project Structure
 
 ```
 BH_Bot/
-├── bot.py                # Main Discord bot code
+├── bot.py                # Main bot logic
 ├── subfinder_scan.sh     # Subfinder wrapper script
 ├── nmap_scan.sh          # Nmap wrapper script
-├── nf_scan.sh            # NF wrapper script
+├── nf_scan.sh            # Nuclear wrapper script
+├── paramspider_debug.log # (Auto-generated) Paramspider logs
 └── README.md             # This file
 ```
 
 ## Security Considerations
 
-- The bot automatically cleans up scan result files after sending them
-- Make sure to run scans only against domains you have permission to test
-- Consider implementing rate limiting and access controls
-- Keep your Discord bot token secure and never share it publicly
+- Cleanup: All temporary files are deleted after execution
+- Permissions: Only scan domains you are authorized to test
+- Token Safety: Never share your Discord token publicly
+- Rate Limiting: Consider implementing user access control
 
 ## Error Handling
 
 The bot includes error handling for:
-- Failed scans
-- File operations
-- Command execution
-- Discord message size limits
+- Tool execution failures
+- Missing output files
+- Message size limits (Discord max 2000 characters)
+- Logs only serious errors, filters out harmless info/debug logs
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Feel free to submit a pull request with improvements or new features.
 
 ## Disclaimer
 
-This tool is for educational and authorized testing purposes only. Users are responsible for ensuring they have permission to scan any target domains. The authors are not responsible for any misuse or damage caused by this tool.
+This tool is intended only for educational and authorized testing purposes. Scanning unauthorized targets may be illegal. The authors are not responsible for any misuse or damage caused by this tool.
+
+
+Let me know if you'd like:
+- a badge-style README (`![build]`, etc.)
+- screenshots of the bot in action
+- a Docker setup for easier deployment
