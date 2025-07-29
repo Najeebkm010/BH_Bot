@@ -51,7 +51,6 @@ sudo apt-get install nmap
 golang git
 
 # Install subfinder
-# Install subfinder
 go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
 # Install paramspider
