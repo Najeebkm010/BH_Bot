@@ -152,4 +152,35 @@ async def xss(ctx, domain: str):
         if os.path.exists(kxss_output_file):
             os.remove(kxss_output_file)
 
+@bot.command()
+async def ip(ctx, domain: str):
+    """Command to get IPs using getips.sh script"""
+    result_file = 'ip_results.txt'
+
+    try:
+        # Run the getips.sh script
+        with open(result_file, 'w') as file:
+            ip_process = subprocess.Popen(['./getips.sh', domain], stdout=file, stderr=subprocess.PIPE)
+            _, stderr = ip_process.communicate()
+            if stderr:
+                file.write("\nErrors:\n" + stderr.decode())
+
+        # Read and send output
+        with open(result_file, 'r') as file:
+            result = file.read()
+            if len(result.strip()) == 0:
+                await ctx.send("No IP data was returned.")
+            elif len(result) <= MAX_MESSAGE_LENGTH:
+                await ctx.send(f"IPs for `{domain}`:\n```{result}```")
+            else:
+                await ctx.send(file=discord.File(result_file))
+
+    except Exception as e:
+        await ctx.send(f"Error running IP check: {str(e)}")
+
+    finally:
+        if os.path.exists(result_file):
+            os.remove(result_file)
+
+
 bot.run(TOKEN)
