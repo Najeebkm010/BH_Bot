@@ -10,6 +10,7 @@ A Discord bot that provides security scanning capabilities through simple comman
 - **Port Scanning**: Perform port scans using `nmap`
 - **NF Scanning**: Run Nuclear Fuzzer (nf) scans for security testing
 - **XSS Detection**: Discover reflected XSS using `paramspider` + `kxss`
+- **IP Lookup**: Resolve domain to IP address using built-in Python libraries
 - **Smart Output**: Results sent directly in Discord if small, or uploaded as a file if large
 - **Automatic Cleanup**: Temporary result files are removed after sending
 - **Basic Error Filtering**: Logs only real errors, ignores tool info/debug output
@@ -27,6 +28,7 @@ Make sure you have the following installed and accessible from your system's PAT
 - [`nf` (Nuclear Fuzzer)](https://github.com/devanshbatham/Nuclear)
 - [`paramspider`](https://github.com/devanshbatham/paramspider)
 - [`kxss`](https://github.com/tomnomnom/kxss)
+- Go language (for subfinder and kxss)
 
 ---
 
@@ -84,6 +86,7 @@ Once the bot is running, use the following commands in your Discord server:
 | `!port <domain>` | Perform port scanning                       |
 | `!nf <domain>`   | Run Nuclear Fuzzer scan                     |
 | `!xss <domain>`  | Detect reflected XSS via paramspider + kxss |
+| `!ip <domain>`   | Resolve domain to IP address                |
 ```
 
 Example usage:
@@ -93,6 +96,7 @@ Example usage:
 !port example.com
 !nf example.com
 !xss testphp.vulnweb.com
+!ip google.com
 ```
 
 ## Project Structure
@@ -103,7 +107,8 @@ BH_Bot/
 ├── subfinder_scan.sh     # Subfinder wrapper script
 ├── nmap_scan.sh          # Nmap wrapper script
 ├── nf_scan.sh            # Nuclear wrapper script
-├── paramspider_debug.log # (Auto-generated) Paramspider logs
+├── getips.sh             # IP crawling script
+├── xss_scan.sh           # XSS script
 └── README.md             # This file
 ```
 
